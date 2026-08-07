@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #FAFAF7;
+  --color-surface: #FFFFFF;
+  --color-ink: #0A0A0B;
+  --color-ink-soft: #3D3D3F;
+  --color-electric: #2A46FF;
+  --color-electric-deep: #121C8F;
+  --color-electric-soft: #EAEDFF;
+  --color-gray: #E8E7E2;
+  --color-gray-mid: #9C9B94;
+  --color-line: #DBDAD4;
+
+  --font-display: 'Unbounded', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* Dark mode — same tokens, re-mapped for dark surfaces. Every existing
+   background, text, and border utility already reads from these variables,
+   so this block alone re-themes the whole site without touching markup. */
+html.dark {
+  --color-bg: #0B0B0D;
+  --color-surface: #131316;
+  --color-ink: #F5F5F3;
+  --color-ink-soft: #B8B8B4;
+  --color-electric: #5C7CFF;
+  --color-electric-deep: #A8B8FF;
+  --color-electric-soft: #182454;
+  --color-gray: #1C1C20;
+  --color-gray-mid: #9A9A96;
+  --color-line: #26262A;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  background: var(--color-electric);
+  color: white;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink);
+  border: 2px solid var(--color-bg);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

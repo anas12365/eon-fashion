@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16
+    container_name: eon_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: eon_db
+      POSTGRES_USER: eon_user
+      POSTGRES_PASSWORD: eon_local_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - eon_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eon_user -d eon_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  eon_pg_data:

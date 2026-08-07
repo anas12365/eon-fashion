@@ -1,0 +1,35 @@
+# --- Environment / secrets ---
+.env
+.env.local
+.env.production
+.env.production.template
+backend/.env
+backend/.env.local
+backend/.env.production
+backend/.env.production.template
+
+# --- Python / Django ---
+backend/venv/
+backend/**/__pycache__/
+**/__pycache__/
+*.pyc
+backend/staticfiles/
+backend/media/
+db.sqlite3
+
+# --- Node / React ---
+node_modules/
+dist/
+build/
+.vite/
+
+# --- Editor / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+npm-debug.log*
+*.zip
