@@ -32,12 +32,12 @@ export default function Footer() {
           <div>
             <p className="eyebrow text-gray-mid">Order via WhatsApp</p>
             <a
-              href="https://wa.me/201022133876"
+              href="https://wa.me/201103686261"
               target="_blank"
               rel="noreferrer"
               className="mt-4 inline-block font-mono text-sm text-ink underline decoration-electric decoration-2 underline-offset-4"
             >
-              +20 102 213 3876
+              +20 110 368 6261
             </a>
             <p className="eyebrow mt-8 text-gray-mid">Payment</p>
             <p className="mt-2 text-sm text-ink-soft">Cash on Delivery only</p>

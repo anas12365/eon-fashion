@@ -1,4 +1,4 @@
-export const WHATSAPP_NUMBER = '201022133876'; // 01022133876 in international format (Egypt)
+export const WHATSAPP_NUMBER = '201103686261'; // 01103686261 in international format (Egypt)
 
 export function buildOrderMessage({ customer, items, subtotal, currency }) {
   const lines = [];

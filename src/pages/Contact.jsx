@@ -12,7 +12,7 @@ export default function Contact() {
     e.preventDefault();
     const text = `Hi EON, my name is ${form.name}.\n\n${form.message}\n\n(Reply to: ${form.email})`;
     window.open(
-      `https://wa.me/201022133876?text=${encodeURIComponent(text)}`,
+      `https://wa.me/201103686261?text=${encodeURIComponent(text)}`,
       '_blank',
       'noopener,noreferrer'
     );
@@ -39,12 +39,12 @@ export default function Contact() {
               <div>
                 <p className="eyebrow text-gray-mid">WhatsApp</p>
                 <a
-                  href="https://wa.me/201022133876"
+                  href="https://wa.me/201103686261"
                   target="_blank"
                   rel="noreferrer"
                   className="font-mono mt-2 block text-lg text-ink hover:text-electric"
                 >
-                  +20 102 213 3876
+                  +20 110 368 6261
                 </a>
               </div>
               <div>
