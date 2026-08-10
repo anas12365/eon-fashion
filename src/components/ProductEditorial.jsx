@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { getThumbUrl } from '../lib/images';
+import { getLargeUrl } from '../lib/images';
 
 // Full-bleed editorial layout: image on one side, copy on the other,
 // alternating per index — reads like a fashion magazine spread rather
@@ -21,9 +21,13 @@ export default function ProductEditorial({ product, index, formatPrice }) {
       className="grid items-center gap-10 border-t border-line py-16 md:grid-cols-2 md:gap-16 md:py-28"
     >
       <div className={reversed ? 'md:order-2' : ''}>
-        <div className="relative aspect-[4/5] overflow-hidden bg-gray">
+        <Link
+          to={`/product/${product.id}`}
+          aria-label={`View ${product.name}`}
+          className="relative block aspect-[4/5] overflow-hidden bg-gray"
+        >
           {(() => {
-            const src = getThumbUrl(product.images[0]);
+            const src = getLargeUrl(product.images[0]);
             return (
               src && (
                 <motion.img
@@ -40,7 +44,7 @@ export default function ProductEditorial({ product, index, formatPrice }) {
           <span className="eyebrow absolute left-5 top-5 bg-bg/85 px-3 py-1.5 text-ink backdrop-blur-sm">
             {product.tag}
           </span>
-        </div>
+        </Link>
       </div>
 
       <motion.div

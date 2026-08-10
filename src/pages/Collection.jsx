@@ -1,19 +1,26 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
 import ProductEditorial from '../components/ProductEditorial';
 import { useProducts } from '../hooks/useProducts';
+import { subscribeCategories } from '../lib/db/categories';
 
 const formatPrice = (n, c) => `${n.toLocaleString()} ${c}`;
 
-const FILTERS = ['All', 'Jet Black', 'Off White', 'Electric Blue'];
-
 export default function Collection() {
   const [filter, setFilter] = useState('All');
+  const [categories, setCategories] = useState([]);
   const { products, loading } = useProducts();
+
+  useEffect(() => subscribeCategories(setCategories), []);
+
+  const filters = useMemo(
+    () => ['All', ...categories.map((c) => c.name)],
+    [categories]
+  );
 
   const filtered = useMemo(() => {
     if (filter === 'All') return products;
-    return products.filter((p) => p.colors.includes(filter));
+    return products.filter((p) => p.category === filter);
   }, [filter, products]);
 
   return (
@@ -28,7 +35,7 @@ export default function Collection() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          {FILTERS.map((f) => (
+          {filters.map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}

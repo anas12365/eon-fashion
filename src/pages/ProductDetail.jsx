@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import { useProduct, useRelatedProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
@@ -20,10 +19,28 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState('');
   const [added, setAdded] = useState(false);
+  const galleryRef = useRef(null);
 
   useEffect(() => {
     if (product && !color) setColor(product.colors?.[0] ?? null);
   }, [product, color]);
+
+  // Keeps the dot indicator in sync while the person swipes/scrolls the
+  // gallery by hand, instead of only reacting to explicit dot taps.
+  const handleGalleryScroll = () => {
+    const el = galleryRef.current;
+    if (!el) return;
+    const index = Math.round(el.scrollLeft / el.clientWidth);
+    setActiveImage((prev) => (prev === index ? prev : index));
+  };
+
+  // Used by the dot indicators so clicking/tapping one also scrolls the
+  // swipeable gallery to that image (keeps mouse users in sync too).
+  const scrollToImage = (i) => {
+    const el = galleryRef.current;
+    if (el) el.scrollTo({ left: el.clientWidth * i, behavior: 'smooth' });
+    setActiveImage(i);
+  };
 
   if (loading) return null;
   if (!product) return <Navigate to="/collection" replace />;
@@ -49,43 +66,44 @@ export default function ProductDetail() {
         </p>
 
         <div className="grid gap-12 md:grid-cols-2 md:gap-16">
-          {/* Gallery */}
+          {/* Gallery — horizontal swipe/scroll on touch, arrow-free by
+              design so it works the same with a finger or a mouse drag. */}
           <div>
-            <div className="relative aspect-[4/5] overflow-hidden bg-gray">
-              <AnimatePresence mode="wait">
-                {getLargeUrl(product.images[activeImage]) && (
-                  <motion.img
-                    key={activeImage}
-                    src={getLargeUrl(product.images[activeImage])}
-                    alt={product.name}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.35 }}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="mt-4 flex gap-3">
+            <div
+              ref={galleryRef}
+              onScroll={handleGalleryScroll}
+              className="flex aspect-[4/5] snap-x snap-mandatory overflow-x-auto overscroll-x-contain bg-gray [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            >
               {product.images.map((img, i) => {
-                const src = getThumbUrl(img);
+                const src = getLargeUrl(img);
                 if (!src) return null;
                 return (
-                  <button
+                  <img
                     key={src}
-                    onClick={() => setActiveImage(i)}
-                    className={`h-20 w-16 overflow-hidden border transition-colors ${
-                      activeImage === i ? 'border-ink' : 'border-line'
-                    }`}
-                  >
-                    <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
-                  </button>
+                    src={src}
+                    alt={`${product.name} — view ${i + 1}`}
+                    className="h-full w-full flex-shrink-0 snap-center object-cover"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
                 );
               })}
             </div>
+
+            {product.images.length > 1 && (
+              <div className="mt-4 flex justify-center gap-2">
+                {product.images.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => scrollToImage(i)}
+                    aria-label={`Show image ${i + 1}`}
+                    className={`h-2 w-2 rounded-full transition-colors ${
+                      activeImage === i ? 'bg-ink' : 'bg-line'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Info */}
