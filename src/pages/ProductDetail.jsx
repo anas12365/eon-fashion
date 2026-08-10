@@ -82,7 +82,7 @@ export default function ProductDetail() {
                     key={src}
                     src={src}
                     alt={`${product.name} — view ${i + 1}`}
-                    className="h-full w-full flex-shrink-0 snap-center object-cover"
+                    className="h-full w-full flex-shrink-0 snap-center object-contain"
                     loading={i === 0 ? 'eager' : 'lazy'}
                     decoding="async"
                   />

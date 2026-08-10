@@ -1,5 +1,4 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { getLargeUrl } from '../lib/images';
 
@@ -8,18 +7,9 @@ import { getLargeUrl } from '../lib/images';
 // than a product grid.
 export default function ProductEditorial({ product, index, formatPrice }) {
   const reversed = index % 2 === 1;
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-  const imgY = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
 
   return (
-    <div
-      ref={ref}
-      className="grid items-center gap-10 border-t border-line py-16 md:grid-cols-2 md:gap-16 md:py-28"
-    >
+    <div className="grid items-center gap-10 border-t border-line py-16 md:grid-cols-2 md:gap-16 md:py-28">
       <div className={reversed ? 'md:order-2' : ''}>
         <Link
           to={`/product/${product.id}`}
@@ -30,11 +20,10 @@ export default function ProductEditorial({ product, index, formatPrice }) {
             const src = getLargeUrl(product.images[0]);
             return (
               src && (
-                <motion.img
-                  style={{ y: imgY }}
+                <img
                   src={src}
                   alt={product.name}
-                  className="h-[115%] w-full object-cover"
+                  className="h-full w-full object-contain"
                   loading="lazy"
                   decoding="async"
                 />
