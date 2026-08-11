@@ -1,15 +1,25 @@
-// Django owns product image *files*: Product.images is a JSONField of
+// Django owns product image files: Product.images is a JSONField of
 // URLs the backend hands back after an upload. Client-side resize/WebP-
 // encode still happens in imageProcessing.js; only the upload/delete
 // transport lives here. The saved shape is { large: "<url>", thumb:
 // "<url>" } — src/lib/images.js is the single place that resolves that
 // shape for display, so nothing downstream (ProductDetail, Collection,
 // Cart, Inventory, Admin Products) needs to know how it got there.
-import { authFetch } from '../services/api';
-import { processProductImage, toWebPFilename, extensionForMime } from './imageProcessing';
 
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5MB — applies to the original picked file, before optimization
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
+import { authFetch } from '../services/api';
+import {
+  processProductImage,
+  toWebPFilename,
+  extensionForMime
+} from './imageProcessing';
+
+const ACCEPTED_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/avif'
+];
 
 // Checked at selection time, before we ever touch the network, so bad
 // files never even get queued for processing/upload.
@@ -17,10 +27,7 @@ export function validateImageFile(file) {
   if (!ACCEPTED_TYPES.includes(file.type)) {
     return `"${file.name}" isn't a supported image type (use JPG, PNG, WEBP, GIF, or AVIF).`;
   }
-  if (file.size > MAX_IMAGE_BYTES) {
-    const mb = (file.size / (1024 * 1024)).toFixed(1);
-    return `"${file.name}" is ${mb}MB — max size is 5MB.`;
-  }
+
   return null;
 }
 
