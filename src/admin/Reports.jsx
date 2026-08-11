@@ -276,8 +276,8 @@ function InventoryReport() {
             />
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-lg border border-black/10 bg-white">
-            <table className="w-full text-left text-sm">
+          <div className="mt-6 overflow-x-auto rounded-lg border border-black/10 bg-white">
+            <table className="w-full min-w-[640px] text-left text-sm">
               <thead className="border-b border-black/10 bg-black/[0.02] text-xs uppercase tracking-wide text-black/40">
                 <tr>
                   <th className="px-4 py-3 font-medium">Product</th>
@@ -343,8 +343,8 @@ function ProductsReport({ dateFrom, dateTo, setDateFrom, setDateTo }) {
       {!data && !error && <p className="mt-6 text-sm text-black/40">Loading…</p>}
 
       {data && (
-        <div className="mt-6 overflow-hidden rounded-lg border border-black/10 bg-white">
-          <table className="w-full text-left text-sm">
+        <div className="mt-6 overflow-x-auto rounded-lg border border-black/10 bg-white">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="border-b border-black/10 bg-black/[0.02] text-xs uppercase tracking-wide text-black/40">
               <tr>
                 <th className="px-4 py-3 font-medium">#</th>

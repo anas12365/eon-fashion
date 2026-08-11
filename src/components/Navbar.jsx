@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
-import ThemeToggle from './ThemeToggle';
 import eonBadgeInk from '../assets/logo/eon-badge-ink.png';
 import eonBadgeWhite from '../assets/logo/eon-badge-white.png';
 import eonBadgeElectric from '../assets/logo/eon-badge-electric.png';
@@ -168,7 +167,6 @@ export default function Navbar() {
           </nav>
 
           <div className="flex flex-shrink-0 items-center gap-4 sm:gap-5">
-            <ThemeToggle />
             <button
               aria-label="Search"
               onClick={() => setSearchOpen(true)}

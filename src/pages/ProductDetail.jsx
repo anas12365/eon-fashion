@@ -72,7 +72,7 @@ export default function ProductDetail() {
             <div
               ref={galleryRef}
               onScroll={handleGalleryScroll}
-              className="flex aspect-[4/5] snap-x snap-mandatory overflow-x-auto overscroll-x-contain bg-gray [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="flex items-start snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {product.images.map((img, i) => {
                 const src = getLargeUrl(img);
@@ -82,7 +82,7 @@ export default function ProductDetail() {
                     key={src}
                     src={src}
                     alt={`${product.name} — view ${i + 1}`}
-                    className="h-full w-full flex-shrink-0 snap-center object-contain"
+                    className="block h-auto w-full flex-shrink-0 snap-center"
                     loading={i === 0 ? 'eager' : 'lazy'}
                     decoding="async"
                   />

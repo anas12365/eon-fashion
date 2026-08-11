@@ -35,7 +35,7 @@ export default function Home() {
 
         <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 md:px-10">
           <p className="eyebrow hero-line text-electric">EON — SS26 Drop</p>
-          <h1 className="font-display mt-4 text-[clamp(2.75rem,13vw,10rem)] font-bold leading-[0.92] tracking-tight text-ink">
+          <h1 className="font-display mt-4 break-words text-[clamp(2.25rem,11vw,10rem)] font-bold leading-[0.92] tracking-tight text-ink">
             <span className="hero-line block">EON</span>
             <span className="hero-line block text-electric">ENDLESS</span>
             <span className="hero-line block">COLLECTION</span>

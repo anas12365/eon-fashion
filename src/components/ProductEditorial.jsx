@@ -14,7 +14,7 @@ export default function ProductEditorial({ product, index, formatPrice }) {
         <Link
           to={`/product/${product.id}`}
           aria-label={`View ${product.name}`}
-          className="relative block aspect-[4/5] overflow-hidden bg-gray"
+          className="relative block overflow-hidden"
         >
           {(() => {
             const src = getLargeUrl(product.images[0]);
@@ -23,7 +23,7 @@ export default function ProductEditorial({ product, index, formatPrice }) {
                 <img
                   src={src}
                   alt={product.name}
-                  className="h-full w-full object-contain"
+                  className="block h-auto w-full"
                   loading="lazy"
                   decoding="async"
                 />

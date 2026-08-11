@@ -130,8 +130,8 @@ export default function AdminCustomers() {
 
       {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 
-      <div className="mt-4 overflow-hidden rounded-lg border border-black/10 bg-white">
-        <table className="w-full text-left text-sm">
+      <div className="mt-4 overflow-x-auto rounded-lg border border-black/10 bg-white">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="border-b border-black/10 bg-black/[0.02] text-xs uppercase tracking-wide text-black/40">
             <tr>
               <th className="px-4 py-3 font-medium">Customer</th>
