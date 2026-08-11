@@ -165,11 +165,12 @@ export default function Intro({ onDone }) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[999] flex flex-col items-center justify-center overflow-hidden"
+        className="fixed inset-0 z-[999] flex flex-col items-center justify-center overflow-hidden cursor-pointer"
         style={{ backgroundColor: '#070708' }}
         initial={{ opacity: 1 }}
         animate={{ opacity: exiting ? 0 : 1, scale: exiting ? 1.05 : 1 }}
         transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
+        
         onAnimationComplete={() => {
           if (exiting) {
             document.body.style.overflow = '';
@@ -182,7 +183,6 @@ export default function Intro({ onDone }) {
         <div className="flex flex-col items-center -translate-y-[3%]">
           <button
             type="button"
-            onClick={handleEnter}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
             aria-label="Open EON"
