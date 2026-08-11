@@ -170,7 +170,7 @@ export default function Intro({ onDone }) {
         initial={{ opacity: 1 }}
         animate={{ opacity: exiting ? 0 : 1, scale: exiting ? 1.05 : 1 }}
         transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
-        
+         onClick={handleEnter}
         onAnimationComplete={() => {
           if (exiting) {
             document.body.style.overflow = '';
