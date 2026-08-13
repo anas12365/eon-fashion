@@ -48,6 +48,27 @@ export default function Footer() {
           <p className="font-mono">© {new Date().getFullYear()} EON. All rights reserved.</p>
           <p className="eyebrow">Endless Collection ∞</p>
         </div>
+
+        <div className="mt-6 flex flex-col items-start gap-2 text-xs text-gray-mid md:flex-row md:items-center md:gap-4">
+          <p className="font-mono">Built by</p>
+          <a
+            href="https://wa.me/201067085956"
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono underline decoration-electric decoration-2 underline-offset-4 hover:text-electric"
+          >
+            Anas Basheer
+          </a>
+          <span className="hidden md:inline">&middot;</span>
+          <a
+            href="https://wa.me/201022133876"
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono underline decoration-electric decoration-2 underline-offset-4 hover:text-electric"
+          >
+            Mohamed Sherif
+          </a>
+        </div>
       </div>
     </footer>
   );
