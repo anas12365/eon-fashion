@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { useCart } from '../context/CartContext';
-import { openWhatsAppOrder } from '../utils/whatsapp';
 import { createOrder } from '../lib/db/orders';
 
 const fmt = (n) => `${n.toLocaleString()} EGP`;
@@ -36,7 +35,6 @@ export default function Cart() {
         subtotal,
         currency: 'EGP',
       });
-      openWhatsAppOrder({ customer, items, subtotal, currency: 'EGP' });
       clearCart();
       navigate(`/order-success/${displayId}`);
     } catch (err) {
@@ -162,11 +160,10 @@ export default function Cart() {
                 aria-busy={submitting}
                 className="eyebrow mt-8 flex w-full items-center justify-center gap-3 bg-electric py-4 text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {submitting ? 'Placing Order…' : 'Confirm via WhatsApp'}
+                {submitting ? 'Placing Order…' : 'Place Order'}
               </button>
               <p className="mt-4 text-center text-xs text-gray-mid">
-                Opens WhatsApp with your order pre-filled — nothing is
-                charged automatically.
+                We'll contact you to confirm — nothing is charged automatically.
               </p>
             </div>
           </div>
