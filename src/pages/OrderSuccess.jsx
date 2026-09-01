@@ -30,8 +30,8 @@ export default function OrderSuccess() {
           Thank You
         </h1>
         <p className="mt-6 max-w-md text-ink-soft">
-          Your order has been received. We'll confirm the details with you
-          over WhatsApp shortly.
+          Your order has been received. We'll contact you shortly to
+          confirm the details.
         </p>
 
         <div className="mt-8 border border-line px-8 py-4">
