@@ -1,31 +1,75 @@
 """
-Notification hooks for the order lifecycle — architecture only.
+Notification hooks for the order lifecycle.
 
-No email/SMS/WhatsApp provider is wired up here yet, on purpose (the
-storefront still opens a pre-filled WhatsApp chat client-side for now —
-see src/utils/whatsapp.js). This module exists so that when a real
-notification channel is added, it's a new function body here plus one
-new setting, not a change to views.py/serializers.py or any call site.
+New-order alerts go out over Telegram (see notify_new_order below) — the
+storefront also still opens a pre-filled WhatsApp chat client-side for
+the *customer* to confirm (see src/utils/whatsapp.js); this is the
+separate admin-side "a new order just came in" alert.
 
-To add a real channel later:
-  1. Implement the body of the relevant function below (e.g. call
-     Twilio/WhatsApp Business API/an email backend).
-  2. Everything already calls these functions at the right moments —
-     no other file needs to change.
+notify_status_change / notify_order_cancelled are architecture-only
+placeholders still, on purpose — no channel wired up for those yet. To
+add one later: implement the function body, no other file needs to
+change, since everything already calls these functions at the right
+moments.
 """
 
+import json
 import logging
+import urllib.error
+import urllib.request
+
+from django.conf import settings
 
 logger = logging.getLogger('orders.notifications')
 
 
+def _send_telegram_message(text):
+    """Post a plain-text message to the configured Telegram chat via the
+    Bot API. Uses only the standard library (urllib) — no new dependency
+    for one small HTTP call. Never raises: a missing/invalid token, an
+    unreachable network, or a Telegram-side error should never break
+    order creation for the customer — it's only logged."""
+    token = settings.TELEGRAM_BOT_TOKEN
+    chat_id = settings.TELEGRAM_CHAT_ID
+    if not token or not chat_id:
+        logger.info('Telegram not configured (TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID unset) — skipping alert')
+        return
+
+    url = f'https://api.telegram.org/bot{token}/sendMessage'
+    payload = json.dumps({'chat_id': chat_id, 'text': text}).encode('utf-8')
+    request = urllib.request.Request(
+        url, data=payload, headers={'Content-Type': 'application/json'}, method='POST',
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            if response.status != 200:
+                logger.warning('Telegram API returned status %s', response.status)
+    except urllib.error.URLError as exc:
+        logger.warning('Failed to send Telegram order alert: %s', exc)
+
+
 def notify_new_order(order):
     """Called right after an order is successfully created and stock is
-    reserved. Intended future use: email/WhatsApp the customer a
-    confirmation, and/or alert the admin (staff) of a new order."""
+    reserved. Sends a Telegram alert to the admin group with the order
+    details so a new order is never missed."""
     logger.info('New order %s from %s (%s items, total %s %s)',
                 order.display_id, order.customer_name, order.items.count(),
                 order.total, order.currency)
+
+    lines = [
+        f'🛍️ New order {order.display_id}',
+        f'Customer: {order.customer_name}',
+        f'Phone: {order.phone}',
+        f'Address: {order.address}',
+        '',
+    ]
+    for item in order.items.all():
+        lines.append(f'• {item.product_name} — {item.size}/{item.color} × {item.quantity}')
+    lines.append('')
+    lines.append(f'Total: {order.total} {order.currency}')
+    lines.append(f'Payment: {order.payment_method}')
+
+    _send_telegram_message('\n'.join(lines))
 
 
 def notify_status_change(order, old_status, new_status):
