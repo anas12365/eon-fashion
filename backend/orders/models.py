@@ -7,9 +7,9 @@ from products.models import Product
 
 
 def generate_display_id():
-    """Human-readable order code, e.g. EON-4F9K2 — mirrors the Firestore
-    version's generateDisplayId() so existing order-lookup UX stays the same."""
-    suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    """Human-readable order code, e.g. EON-48291 — digits only (random,
+    not sequential), per the store owner's preference."""
+    suffix = ''.join(random.choices(string.digits, k=5))
     return f'EON-{suffix}'
 
 
