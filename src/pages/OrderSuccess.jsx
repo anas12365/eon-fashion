@@ -1,9 +1,30 @@
-import { useParams, Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 
 export default function OrderSuccess() {
   const { orderId } = useParams();
+  const location = useLocation();
+  const total = location.state?.total;
+
+  // Fires Meta's "Purchase" conversion event — this is the event the
+  // ad account actually optimizes/reports against, distinct from the
+  // PageView that fires on every page via the pixel snippet in
+  // index.html. Guarded by orderId in sessionStorage so a page refresh
+  // (or the customer navigating back to this URL later) never double
+  // -counts the same order as two purchases.
+  useEffect(() => {
+    if (!orderId || typeof window === 'undefined' || typeof window.fbq !== 'function') return;
+    const key = `eon_purchase_tracked_${orderId}`;
+    if (sessionStorage.getItem(key)) return;
+    window.fbq('track', 'Purchase', {
+      value: total,
+      currency: 'EGP',
+      content_ids: [orderId],
+    });
+    sessionStorage.setItem(key, '1');
+  }, [orderId, total]);
 
   return (
     <PageTransition>

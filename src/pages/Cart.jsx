@@ -36,7 +36,7 @@ export default function Cart() {
         currency: 'EGP',
       });
       clearCart();
-      navigate(`/order-success/${displayId}`);
+      navigate(`/order-success/${displayId}`, { state: { total: subtotal } });
     } catch (err) {
       // Surface real validation messages (e.g. "only 3 left in stock")
       // when the backend provides one, instead of only a generic
