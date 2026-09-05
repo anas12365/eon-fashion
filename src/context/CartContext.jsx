@@ -45,6 +45,15 @@ export function CartProvider({ children }) {
       ];
     });
     setIsCartOpen(true);
+
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', 'AddToCart', {
+        content_ids: [product.id],
+        content_name: product.name,
+        value: product.price * quantity,
+        currency: 'EGP',
+      });
+    }
   };
 
   const updateQuantity = (lineId, quantity) => {

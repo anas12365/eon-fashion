@@ -1,21 +1,26 @@
 import { useEffect } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 
 export default function OrderSuccess() {
   const { orderId } = useParams();
-  const location = useLocation();
-  const total = location.state?.total;
+  const [searchParams] = useSearchParams();
+  const total = Number(searchParams.get('total'));
 
   // Fires Meta's "Purchase" conversion event — this is the event the
   // ad account actually optimizes/reports against, distinct from the
   // PageView that fires on every page via the pixel snippet in
-  // index.html. Guarded by orderId in sessionStorage so a page refresh
-  // (or the customer navigating back to this URL later) never double
-  // -counts the same order as two purchases.
+  // index.html. The order value travels in the URL (?total=...) rather
+  // than router navigation state, because state doesn't survive a page
+  // refresh or a direct link open — losing it silently sent `value:
+  // undefined` to Meta, which is what caused the "Parameter 'currency'
+  // is invalid" console warning (Meta rejects the event when value is
+  // missing, and reports it against the neighboring currency param).
+  // Guarded by orderId in sessionStorage so a refresh (or revisiting
+  // this URL later) never double-counts the same order as two purchases.
   useEffect(() => {
-    if (!orderId || typeof window === 'undefined' || typeof window.fbq !== 'function') return;
+    if (!orderId || !total || typeof window === 'undefined' || typeof window.fbq !== 'function') return;
     const key = `eon_purchase_tracked_${orderId}`;
     if (sessionStorage.getItem(key)) return;
     window.fbq('track', 'Purchase', {

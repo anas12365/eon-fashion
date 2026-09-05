@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { useCart } from '../context/CartContext';
@@ -12,6 +12,27 @@ export default function Cart() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const checkoutTracked = useRef(false);
+
+  // Fires Meta's "InitiateCheckout" once per visit to this page while
+  // the bag has items — signals "customer started checking out",
+  // distinct from AddToCart (adding an item) and Purchase (completed
+  // order). Guarded by a ref rather than sessionStorage: unlike
+  // Purchase, re-firing on a later separate visit to the cart is fine
+  // and expected — we just don't want it firing again on every re-render
+  // of this same page (e.g. as quantities change).
+  useEffect(() => {
+    if (checkoutTracked.current) return;
+    if (items.length === 0) return;
+    if (typeof window === 'undefined' || typeof window.fbq !== 'function') return;
+    window.fbq('track', 'InitiateCheckout', {
+      value: subtotal,
+      currency: 'EGP',
+      content_ids: items.map((i) => i.id),
+      num_items: items.reduce((sum, i) => sum + i.quantity, 0),
+    });
+    checkoutTracked.current = true;
+  }, [items, subtotal]);
 
   const handleChange = (e) =>
     setCustomer((c) => ({ ...c, [e.target.name]: e.target.value }));
@@ -36,7 +57,7 @@ export default function Cart() {
         currency: 'EGP',
       });
       clearCart();
-      navigate(`/order-success/${displayId}`, { state: { total: subtotal } });
+      navigate(`/order-success/${displayId}?total=${subtotal}`);
     } catch (err) {
       // Surface real validation messages (e.g. "only 3 left in stock")
       // when the backend provides one, instead of only a generic
