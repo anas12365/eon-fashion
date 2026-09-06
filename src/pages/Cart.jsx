@@ -207,17 +207,24 @@ export default function Cart() {
                   <label className="eyebrow text-gray-mid" htmlFor="governorate">
                     Governorate
                   </label>
-                  <select
-                    id="governorate"
-                    name="governorate"
-                    value={customer.governorate}
-                    onChange={handleChange}
-                    className="mt-2 w-full border-b border-line bg-transparent py-3 outline-none focus:border-electric"
-                  >
-                    {GOVERNORATES.map((g) => (
-                      <option key={g} value={g}>{g}</option>
-                    ))}
-                  </select>
+                  <div className="relative mt-2">
+                    <select
+                      id="governorate"
+                      name="governorate"
+                      value={customer.governorate}
+                      onChange={handleChange}
+                      className="w-full appearance-none border-b border-line bg-bg py-3 pr-8 text-ink outline-none focus:border-electric"
+                    >
+                      {GOVERNORATES.map((g) => (
+                        <option key={g} value={g} className="bg-bg text-ink">
+                          {g}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-gray-mid">
+                      ▾
+                    </span>
+                  </div>
                 </div>
                 <Field label="Delivery address" name="address" value={customer.address} onChange={handleChange} textarea />
                 <Field label="Order notes (optional)" name="notes" value={customer.notes} onChange={handleChange} textarea />
