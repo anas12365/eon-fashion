@@ -73,13 +73,14 @@ function unwrapList(raw) {
 // Called from checkout. Any signed-out visitor is allowed to create an
 // order (see OrderPermission on the Django side) but can never read,
 // list, or edit orders afterward — only the admin dashboard can.
-export async function createOrder({ customer, items, subtotal, currency }) {
+export async function createOrder({ customer, items, subtotal, currency, shippingCost = 0 }) {
   const raw = await apiCreateOrder({
     customer_name: customer.name,
     phone: customer.phone,
     address: customer.address,
     notes: customer.notes || '',
     currency: currency || 'EGP',
+    shipping_cost: shippingCost,
     items: items.map((item) => ({
       product: item.id,
       quantity: item.quantity,

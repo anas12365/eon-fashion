@@ -6,13 +6,36 @@ import { createOrder } from '../lib/db/orders';
 
 const fmt = (n) => `${n.toLocaleString()} EGP`;
 
+// Cairo/Giza get the discounted in-city rate; every other governorate
+// pays the standard out-of-town rate. Keep this list exhaustive (all 27
+// governorates) so "Other" never silently applies to somewhere that
+// should count as Cairo/Giza — and so the dropdown always resolves to
+// a real fee, never an unset one.
+const CAIRO_GIZA_FEE = 50;
+const OTHER_FEE = 70;
+const GOVERNORATES = [
+  'Cairo', 'Giza',
+  'Alexandria', 'Aswan', 'Asyut', 'Beheira', 'Beni Suef', 'Dakahlia',
+  'Damietta', 'Faiyum', 'Gharbia', 'Ismailia', 'Kafr El Sheikh',
+  'Luxor', 'Matrouh', 'Minya', 'Monufia', 'New Valley', 'North Sinai',
+  'Port Said', 'Qalyubia', 'Qena', 'Red Sea', 'Sharqia', 'Sohag',
+  'South Sinai', 'Suez',
+];
+const shippingFeeFor = (governorate) =>
+  governorate === 'Cairo' || governorate === 'Giza' ? CAIRO_GIZA_FEE : OTHER_FEE;
+
 export default function Cart() {
   const { items, updateQuantity, removeItem, subtotal, clearCart } = useCart();
-  const [customer, setCustomer] = useState({ name: '', phone: '', address: '', notes: '' });
+  const [customer, setCustomer] = useState({
+    name: '', phone: '', address: '', governorate: 'Cairo', notes: '',
+  });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const checkoutTracked = useRef(false);
+
+  const shippingCost = shippingFeeFor(customer.governorate);
+  const total = subtotal + shippingCost;
 
   // Fires Meta's "InitiateCheckout" once per visit to this page while
   // the bag has items — signals "customer started checking out",
@@ -55,9 +78,10 @@ export default function Cart() {
         items,
         subtotal,
         currency: 'EGP',
+        shippingCost,
       });
       clearCart();
-      navigate(`/order-success/${displayId}?total=${subtotal}`);
+      navigate(`/order-success/${displayId}?total=${total}`);
     } catch (err) {
       // Surface real validation messages (e.g. "only 3 left in stock")
       // when the backend provides one, instead of only a generic
@@ -158,17 +182,43 @@ export default function Cart() {
           {/* Checkout form */}
           <div>
             <div className="border border-line p-8">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-ink-soft">Subtotal</span>
-                <span className="font-mono text-lg">{fmt(subtotal)}</span>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-ink-soft">Subtotal</span>
+                  <span className="font-mono">{fmt(subtotal)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-ink-soft">Shipping</span>
+                  <span className="font-mono">{fmt(shippingCost)}</span>
+                </div>
+                <div className="flex items-center justify-between border-t border-line pt-2">
+                  <span className="text-ink-soft">Total</span>
+                  <span className="font-mono text-lg">{fmt(total)}</span>
+                </div>
               </div>
               <p className="mt-2 text-xs text-gray-mid">
-                Shipping calculated at delivery. Cash on Delivery only.
+                Cash on Delivery only.
               </p>
 
               <div className="mt-8 space-y-5">
                 <Field label="Full name" name="name" value={customer.name} onChange={handleChange} />
                 <Field label="Phone number" name="phone" value={customer.phone} onChange={handleChange} type="tel" />
+                <div>
+                  <label className="eyebrow text-gray-mid" htmlFor="governorate">
+                    Governorate
+                  </label>
+                  <select
+                    id="governorate"
+                    name="governorate"
+                    value={customer.governorate}
+                    onChange={handleChange}
+                    className="mt-2 w-full border-b border-line bg-transparent py-3 outline-none focus:border-electric"
+                  >
+                    {GOVERNORATES.map((g) => (
+                      <option key={g} value={g}>{g}</option>
+                    ))}
+                  </select>
+                </div>
                 <Field label="Delivery address" name="address" value={customer.address} onChange={handleChange} textarea />
                 <Field label="Order notes (optional)" name="notes" value={customer.notes} onChange={handleChange} textarea />
               </div>
