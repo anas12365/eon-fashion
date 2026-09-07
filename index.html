@@ -31,6 +31,27 @@
       fbq('init', '1093728943007909');
       fbq('track', 'PageView');
     </script>
+    <!-- End Meta Pixel Code -->
+
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('eon_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Meta Pixel no-JS fallback — must live in <body>, not <head>:
+         the HTML spec only allows <link>/<style>/<meta> inside a
+         <noscript> that's in <head>, so an <img> there is invalid
+         markup. Newer Vite (which parses the HTML at build time with a
+         spec-strict parser) fails the whole build on this; older Vite
+         silently tolerated it. Functionally identical either way — the
+         browser still requests this pixel on page load regardless of
+         where in the document it sits. -->
     <noscript>
       <img
         height="1"
@@ -47,19 +68,6 @@
         src="https://www.facebook.com/tr?id=1093728943007909&ev=PageView&noscript=1"
       />
     </noscript>
-    <!-- End Meta Pixel Code -->
-
-    <script>
-      (function () {
-        try {
-          if (localStorage.getItem('eon_theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (e) {}
-      })();
-    </script>
-  </head>
-  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
